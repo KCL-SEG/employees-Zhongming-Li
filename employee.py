@@ -8,7 +8,16 @@ class Employee:
         self.commission = commission
 
     def get_pay(self):
-        pass
+        if (self.contract.get_contract_type() == "salary"):
+            if (self.commission.get_commission_type() == "bonus"):
+                return (self.contract.get_salary() + self.commission.get_commission_amount())
+            else:
+                return (self.contract.get_salary() + self.commission.get_commission_amount()*self.commission.get_contract_num())
+        else:
+            if (self.commission.get_commission_type() == "bonus"):
+                return (self.contract.get_salary()*self.get_contract_hours() + self.commission.get_commission_amount())
+            else:
+                return (self.contract.get_salary()*self.get_contract_hours() + self.commission.get_commission_amount()*self.commission.get_contract_num())
 
     def __str__(self):
         return (f'{self.name} works on {self.contract.get_contract_str()} {self.commission.get_commission_str()}. Their total pay is')
