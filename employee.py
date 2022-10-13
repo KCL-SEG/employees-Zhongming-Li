@@ -1,20 +1,7 @@
 """Employee pay calculator."""
 """ENTER YOUR SOLUTION HERE!"""
 
-class Employee:
-    def __init__(self, name, salary, commission):
-        self.name = name
-        self.salary = salary
-        self.commission = commission
-
-    def get_pay(self):
-        return get_salary(self.salary)+get_commission_amount(self.commission)
-
-    def __str__(self):
-        return (f'{self.name} works on {get_salary_str(self.salary)} {get_commission_str(self.commission)}. Their total pay is {get_pay(self)}')
-
-
-class SalaryInterface:
+class SalaryInterface():
     def __init__(self):
         pass
 
@@ -26,18 +13,18 @@ class SalaryInterface:
 
 
 class MonthlySalary(SalaryInterface):
-    def __init__(self, salary_amount):
+    def __init__(self, salary_amount=0):
         self.salary_amount = salary_amount
 
     def get_salary(self):
-        return salary_amount
+        return self.salary_amount
 
     def get_salary_str(self):
         return (f'a monthly salary of {self.salary_amount}')
 
 
 class HourlySalary(SalaryInterface):
-    def __init__(self, salary_amount, hours):
+    def __init__(self, salary_amount=0, hours=0):
         self.salary_amount = salary_amount
         self.hours = hours
 
@@ -46,7 +33,6 @@ class HourlySalary(SalaryInterface):
 
     def get_salary_str(self):
         return (f'a contract of {self.hours} hours at {self.salary_amount}/hour')
-
 
 
 class CommissionInterface:
@@ -61,7 +47,7 @@ class CommissionInterface:
 
 
 class BonusCommission(CommissionInterface):
-    def __init__(self, commission_amount):
+    def __init__(self, commission_amount=0):
         self.commission_amount = commission_amount
 
     def get_commission_amount(self):
@@ -72,7 +58,7 @@ class BonusCommission(CommissionInterface):
 
 
 class ContractCommission(CommissionInterface):
-    def __init__(self, contract_num, commission_amount):
+    def __init__(self, contract_num=0, commission_amount=0):
         self.contract_num = contract_num
         self.commission_amount = commission_amount
 
@@ -94,10 +80,26 @@ class NoCommission(CommissionInterface):
         pass
 
 
+class Employee(SalaryInterface, CommissionInterface):
+    def __init__(self, name, salary, commission):
+        super().__init__()
+        self.name = name
+        self.salary = salary
+        self.commission = commission
+
+    def get_pay(self):
+
+        return self.salary.get_salary()+self.commission.get_commission_amount()
+
+    def __str__(self):
+
+        return (f'{self.name} works on {get_salary_str(self.salary)} {get_commission_str(self.commission)}. Their total pay is {get_pay(self)}')
 
 
 # Billie works on a monthly salary of 4000.  Their total pay is 4000.
-billie = Employee('Billie', 4000, None)
+billie_salary = MonthlySalary(4000)
+billie_commission = NoCommission()
+billie = Employee('Billie', billie_salary, billie_commission)
 
 # Charlie works on a contract of 100 hours at 25/hour.  Their total pay is 2500.
 charlie = Employee('Charlie', (25, 100), None)
