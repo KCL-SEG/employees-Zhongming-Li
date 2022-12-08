@@ -3,12 +3,12 @@
 
 class Contract:
     def __init__(self, salary, hours, contract_type):
-        self.salary = salary * hours
+        self.salary = salary
         self.hours = hours
         self.contract_type = contract_type
 
     def get_salary(self):
-        return self.salary
+        return (self.salary*self.hours)
 
     def get_contract_hours(self):
         return self.hours
@@ -43,9 +43,9 @@ class Commission:
         if (self.commission_type=='no'):
             return ('')
         elif (self.commission_type=='bonus'):
-                return (f' and receives a bonus commission of {self.amount}')
+                return (f' and receives a bonus commission of {self.commission_amount}')
         else:
-            return (f' and receives a commission for {self.contract_num} contract(s) at {self.amount}/contract')
+            return (f' and receives a commission for {self.contract_num} contract(s) at {self.commission_amount}/contract')
 
 
 
@@ -63,9 +63,9 @@ class Employee:
                 return (self.contract.get_salary() + self.commission.get_commission_amount()*self.commission.get_contract_num())
         else:
             if (self.commission.get_commission_type() == "bonus"):
-                return (self.contract.get_salary()*self.contract.get_contract_hours() + self.commission.get_commission_amount())
+                return (self.contract.get_salary() + self.commission.get_commission_amount())
             else:
-                return (self.contract.get_salary()*self.contract.get_contract_hours() + self.commission.get_commission_amount()*self.commission.get_contract_num())
+                return (self.contract.get_salary() + self.commission.get_commission_amount()*self.commission.get_contract_num())
 
     def __str__(self):
         return (f'{self.name} works on {self.contract.get_contract_str()}{self.commission.get_commission_str()}.  Their total pay is {self.get_pay()}.')
@@ -76,7 +76,6 @@ class Employee:
 billie_contract = Contract(4000, 1, 'salary')
 billie_commission = Commission(0, 0, 'no')
 billie = Employee('Billie', billie_contract, billie_commission)
-print(str(billie))
 
 # Charlie works on a contract of 100 hours at 25/hour.  Their total pay is 2500.
 charlie_contract = Contract(25, 100, 'hourly')
@@ -85,11 +84,11 @@ charlie = Employee('Charlie', charlie_contract, charlie_commission)
 
 # Renee works on a monthly salary of 3000 and receives a commission for 4 contract(s) at 200/contract.  Their total pay is 3800.
 renee_contract = Contract(3000, 1, 'salary')
-renee_commission = Commission(4, 200, 'no')
+renee_commission = Commission(4, 200, 'other')
 renee = Employee('Renee', renee_contract, renee_commission)
 
 # Jan works on a contract of 150 hours at 25/hour and receives a commission for 3 contract(s) at 220/contract.  Their total pay is 4410.
-jan_contract = Contract(4000, 1, 'salary')
+jan_contract = Contract(25, 150, 'hourly')
 jan_commission = Commission(3, 220, 'other')
 jan = Employee('Jan', jan_contract, jan_commission)
 
