@@ -1,117 +1,104 @@
 """Employee pay calculator."""
 """ENTER YOUR SOLUTION HERE!"""
 
-class SalaryInterface():
-    def __init__(self):
-        pass
-
-    def get_salary(self):
-        pass
-
-    def get_salary_str(self):
-        pass
-
-
-class MonthlySalary(SalaryInterface):
-    def __init__(self, salary_amount=0):
-        self.salary_amount = salary_amount
-
-    def get_salary(self):
-        return self.salary_amount
-
-    def get_salary_str(self):
-        return (f'a monthly salary of {self.salary_amount}')
-
-
-class HourlySalary(SalaryInterface):
-    def __init__(self, salary_amount=0, hours=0):
-        self.salary_amount = salary_amount
+class Contract:
+    def __init__(self, salary, hours, contract_type):
+        self.salary = salary * hours
         self.hours = hours
+        self.contract_type = contract_type
 
     def get_salary(self):
-        return self.salary_amount * self.hours
+        return self.salary
 
-    def get_salary_str(self):
-        return (f'a contract of {self.hours} hours at {self.salary_amount}/hour')
+    def get_contract_hours(self):
+        return self.hours
 
+    def get_contract_type(self):
+        return self.contract_type
 
-class CommissionInterface:
-    def __init__(self):
-        pass
-
-    def get_commission_amount(self):
-        pass
-
-    def get_commission_str(self):
-        pass
+    def get_contract_str(self):
+        if (self.contract_type=='salary'):
+            return (f'a monthly salary of {self.salary}')
+        else:
+            return (f'a contract of {self.hours} hours at {self.salary}/hour')
 
 
-class BonusCommission(CommissionInterface):
-    def __init__(self, commission_amount=0):
+
+class Commission:
+    def __init__(self, contract_num, commission_amount, commission_type):
+        self.contract_num = contract_num
         self.commission_amount = commission_amount
+        self.commission_type = commission_type
+
+    def get_contract_num(self):
+        return self.contract_num
 
     def get_commission_amount(self):
         return self.commission_amount
 
-    def get_commission_str(self):
-        return (f' and receives a bonus commission of {self.commission_amount}')
-
-
-class ContractCommission(CommissionInterface):
-    def __init__(self, contract_num=0, commission_amount=0):
-        self.contract_num = contract_num
-        self.commission_amount = commission_amount
-
-    def get_commission_amount(self):
-        return self.commission_amount*self.contract_num
+    def get_commission_type(self):
+        return self.commission_type
 
     def get_commission_str(self):
-        return (f' and receives a commission for {self.contract_num} contract(s) at {self.commission_amount}/contract')
+        if (self.commission_type=='no'):
+            return ('')
+        elif (self.commission_type=='bonus'):
+                return (f' and receives a bonus commission of {self.amount}')
+        else:
+            return (f' and receives a commission for {self.contract_num} contract(s) at {self.amount}/contract')
 
 
-class NoCommission(CommissionInterface):
-    def __init__(self):
-        pass
 
-    def get_commission_amount(self):
-        pass
-
-    def get_commission_str(self):
-        pass
-
-
-class Employee(SalaryInterface, CommissionInterface):
-    def __init__(self, name, salary, commission):
-        super().__init__()
+class Employee:
+    def __init__(self, name, contract, commission):
         self.name = name
-        self.salary = salary
+        self.contract = contract
         self.commission = commission
 
     def get_pay(self):
-
-        return self.salary.get_salary()+self.commission.get_commission_amount()
+        if (self.contract.get_contract_type() == "salary"):
+            if (self.commission.get_commission_type() == "bonus"):
+                return (self.contract.get_salary() + self.commission.get_commission_amount())
+            else:
+                return (self.contract.get_salary() + self.commission.get_commission_amount()*self.commission.get_contract_num())
+        else:
+            if (self.commission.get_commission_type() == "bonus"):
+                return (self.contract.get_salary()*self.contract.get_contract_hours() + self.commission.get_commission_amount())
+            else:
+                return (self.contract.get_salary()*self.contract.get_contract_hours() + self.commission.get_commission_amount()*self.commission.get_contract_num())
 
     def __str__(self):
+        return (f'{self.name} works on {self.contract.get_contract_str()}{self.commission.get_commission_str()}.  Their total pay is {self.get_pay()}.')
 
-        return (f'{self.name} works on {get_salary_str(self.salary)} {get_commission_str(self.commission)}. Their total pay is {get_pay(self)}')
 
 
 # Billie works on a monthly salary of 4000.  Their total pay is 4000.
-billie_salary = MonthlySalary(4000)
-billie_commission = NoCommission()
-billie = Employee('Billie', billie_salary, billie_commission)
+billie_contract = Contract(4000, 1, 'salary')
+billie_commission = Commission(0, 0, 'no')
+billie = Employee('Billie', billie_contract, billie_commission)
+print(str(billie))
 
 # Charlie works on a contract of 100 hours at 25/hour.  Their total pay is 2500.
-charlie = Employee('Charlie', (25, 100), None)
+charlie_contract = Contract(25, 100, 'hourly')
+charlie_commission = Commission(0, 0, 'no')
+charlie = Employee('Charlie', charlie_contract, charlie_commission)
 
 # Renee works on a monthly salary of 3000 and receives a commission for 4 contract(s) at 200/contract.  Their total pay is 3800.
-renee = Employee('Renee', (3000, None), (4, 200))
+renee_contract = Contract(3000, 1, 'salary')
+renee_commission = Commission(4, 200, 'no')
+renee = Employee('Renee', renee_contract, renee_commission)
 
 # Jan works on a contract of 150 hours at 25/hour and receives a commission for 3 contract(s) at 220/contract.  Their total pay is 4410.
-jan = Employee('Jan', (25, 150), (3, 220))
+jan_contract = Contract(4000, 1, 'salary')
+jan_commission = Commission(3, 220, 'other')
+jan = Employee('Jan', jan_contract, jan_commission)
 
 # Robbie works on a monthly salary of 2000 and receives a bonus commission of 1500.  Their total pay is 3500.
-robbie = Employee('Robbie', 2000, 1500)
+robbie_contract = Contract(2000, 1, 'salary')
+robbie_commission = Commission(1, 1500, 'bonus')
+robbie = Employee('Robbie', robbie_contract, robbie_commission)
 
 # Ariel works on a contract of 120 hours at 30/hour and receives a bonus commission of 600.  Their total pay is 4200.
-ariel = Employee('Ariel', (30, 120), 600)
+ariel_contract = Contract(30, 120, 'hourly')
+ariel_commission = Commission(1, 600, 'bonus')
+ariel = Employee('Ariel', ariel_contract, ariel_commission)
